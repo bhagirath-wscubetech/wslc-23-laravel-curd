@@ -25,5 +25,7 @@ Route::prefix('/news')->group(
         Route::get('/', [NewsController::class, 'view']);
         Route::get('/add', [NewsController::class, 'add']);
         Route::post('/add', [NewsController::class, 'create']);
+        Route::get('/destroy/{id}', [NewsController::class, 'destroy']);
+        Route::get('/toggle/{id}',[NewsController::class,'toggle']);
     }
 );

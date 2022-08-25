@@ -18,7 +18,8 @@ class NewsController extends Controller
     public function view()
     {
         $title = "View - New | Admin";
-        $data = compact('title');
+        $news = News::orderBy('id', 'desc')->get(); //select 
+        $data = compact('title', 'news');
         return view('news.view')->with($data);
     }
 
@@ -47,7 +48,7 @@ class NewsController extends Controller
             $news->title = $request['news_title'];
             $news->description = $request['news_desc'];
             $news->image = "";
-            $news->save();
+            $news->save(); //create
         } catch (\Exception $err) {
             $news = null;
         }
@@ -56,4 +57,39 @@ class NewsController extends Controller
         }
         return redirect('/news');
     }
+
+    public function destroy($id)
+    {
+        try {
+            $newsData = News::where('id', $id)->first();
+            $newsData->delete();
+        } catch (\Exception $err) {
+            $newsData = null;
+        }
+        if (is_null($newsData)) {
+            return redirect()->back()->withErrors("Internal server error");
+        }
+        return redirect()->back();
+    }
+
+    public function toggle($id)
+    {
+        try {
+            $newsData = News::where('id', $id)->first();
+            if($newsData->status == 1){
+                $newsData->status = 0;
+            }else{
+                $newsData->status = 1;
+            }
+            $newsData->save(); //update
+        } catch (\Exception $err) {
+            $newsData = null;
+        }
+        if (is_null($newsData)) {
+            return redirect()->back()->withErrors("Internal server error");
+        }
+        return redirect()->back();
+    }
+
+    
 }
