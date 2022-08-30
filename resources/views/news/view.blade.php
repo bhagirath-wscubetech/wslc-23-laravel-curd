@@ -55,7 +55,9 @@
                                 </td>
                                 <td>{{ $data->created_at }}</td>
                                 <td>
-                                    <i class="text-primary fa fa-pen"></i>
+                                    <a href="{{url('/news/edit')}}/{{ $data->id }}">
+                                        <i class="text-primary fa fa-pen"></i>
+                                    </a>
                                     <br />
                                     <a href="{{ url('/news/destroy') }}/{{ $data->id }}">
                                         <i class="text-danger fa fa-trash"></i>

@@ -22,13 +22,13 @@ class News extends Model
     }
 
 
-    protected function title(): Attribute
-    {
-        // getter
-        return Attribute::make(
-            get: fn ($value) => lcfirst($value),
-        );
-    }
+    // protected function title(): Attribute
+    // {
+    //     // getter
+    //     return Attribute::make(
+    //         get: fn ($value) => lcfirst($value),
+    //     );
+    // }
 
     public function sluggable(): array
     {

@@ -17,7 +17,7 @@ class NewsController extends Controller
     }
     public function view()
     {
-        $title = "View - New | Admin";
+        $title = "View - News | Admin";
         $news = News::orderBy('id', 'desc')->get(); //select 
         $data = compact('title', 'news');
         return view('news.view')->with($data);
@@ -25,9 +25,7 @@ class NewsController extends Controller
 
     public function create(Request $request)
     {
-        // echo "<pre>";
-        // print_r($request->all());
-        // echo "</pre>";
+
         $validation = Validator::make(
             $request->all(),
             [
@@ -76,9 +74,9 @@ class NewsController extends Controller
     {
         try {
             $newsData = News::where('id', $id)->first();
-            if($newsData->status == 1){
+            if ($newsData->status == 1) {
                 $newsData->status = 0;
-            }else{
+            } else {
                 $newsData->status = 1;
             }
             $newsData->save(); //update
@@ -91,5 +89,50 @@ class NewsController extends Controller
         return redirect()->back();
     }
 
-    
+    public function edit($id)
+    {
+        $news = News::where('id', $id)->first();
+        if (is_null($news)) {
+            return redirect()->back()->withErrors("Invalid id");
+        } else {
+            $data = [
+                'title' => "Update News",
+                'news' => $news
+            ];
+            return view('news.update')->with($data);
+        }
+    }
+
+    public function update($id, Request $request)
+    {
+        $news = News::where('id', $id)->first();
+        if (is_null($news)) {
+            return redirect()->back()->withErrors("Invalid id");
+        } else {
+            $validation = Validator::make(
+                $request->all(),
+                [
+                    'news_title' => ['required', 'max:100'],
+                    'news_desc' => ['required']
+                ],
+                [
+                    'news_desc.required' => 'The news desciption field is required.'
+                ]
+            );
+            if ($validation->fails()) {
+                return redirect()->back()->withErrors($validation->messages())->withInput();
+            }
+            try {
+                $news->title = $request['news_title'];
+                $news->description = $request['news_desc'];
+                $news->save();
+            } catch (Exception $err) {
+                $news = null;
+            }
+            if (is_null($news)) {
+                return redirect()->back()->withErrors("Internal server error")->withInput();
+            }
+            return redirect('/news');
+        }
+    }
 }

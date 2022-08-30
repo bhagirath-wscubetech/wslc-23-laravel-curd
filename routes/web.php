@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\frontend\IndexController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,6 +27,19 @@ Route::prefix('/news')->group(
         Route::get('/add', [NewsController::class, 'add']);
         Route::post('/add', [NewsController::class, 'create']);
         Route::get('/destroy/{id}', [NewsController::class, 'destroy']);
-        Route::get('/toggle/{id}',[NewsController::class,'toggle']);
+        Route::get('/toggle/{id}', [NewsController::class, 'toggle']);
+        Route::get('/edit/{id}', [NewsController::class, 'edit']);
+        Route::post('/update/{id}', [NewsController::class, 'update']);
+    }
+);
+
+Route::prefix('/frontend')->group(
+    function () {
+        Route::prefix('/news')->group(
+            function () {
+                Route::get('/', [IndexController::class, 'view']);
+                Route::get('/{id}', [IndexController::class, 'read']);
+            }
+        );
     }
 );
